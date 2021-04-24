@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jeson Tokenizer", "Jeson Tokenizer\Jeson Tokenizer.csproj", "{A1801CCC-610C-49A8-8581-024AA0D07A9D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1801CCC-610C-49A8-8581-024AA0D07A9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1801CCC-610C-49A8-8581-024AA0D07A9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1801CCC-610C-49A8-8581-024AA0D07A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1801CCC-610C-49A8-8581-024AA0D07A9D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ABC595A9-3C0E-43EB-BC76-B3066041D2F4}
+	EndGlobalSection
+EndGlobal
