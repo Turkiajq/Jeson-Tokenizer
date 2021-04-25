@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 namespace First
 {
@@ -141,39 +142,53 @@ namespace First
         }
         public List<Token> all() { return null; }
     }
-    public class IdTokenizer : Tokenizable
+    public class StringKey : Tokenizable
     {
-        private List<string> keywords;
-        public IdTokenizer(List<string> keywords)
-        {
-            this.keywords = keywords;
-        }
         public override bool tokenizable(Tokenizer t)
         {
             char currentCharacter = t.input.peek();
             //Console.WriteLine(currentCharacter);
-            return Char.IsLetter(currentCharacter) || currentCharacter == '_';
+            return currentCharacter == '"' && t.input.hasMore();
         }
-        static bool isId(Input input)
+        static bool stringKey(Input input)
         {
             char currentCharacter = input.peek();
-            return Char.IsLetterOrDigit(currentCharacter) || currentCharacter == '_';
+            return Char.IsLetterOrDigit(currentCharacter) || currentCharacter == '"' || currentCharacter == ' ';
         }
         public override Token tokenize(Tokenizer t)
         {
             return new Token(t.input.Position, t.input.LineNumber,
-                "identifier", t.input.loop(isId));
+                "StringKey", t.input.loop(stringKey));
+        }
+    }
+    public class Boolean : Tokenizable
+    {
+        public override bool tokenizable(Tokenizer t)
+        {
+            char currentCharacter = t.input.peek();
+            //Console.WriteLine(currentCharacter);
+            return Char.IsLetter(currentCharacter) && t.input.hasMore();
+        }
+        static bool boolean(Input input)
+        {
+            char currentCharacter = input.peek();
+            return Char.IsLetter(currentCharacter) ;
+        }
+        public override Token tokenize(Tokenizer t)
+        {
+            return new Token(t.input.Position, t.input.LineNumber,
+                "boolean", t.input.loop(boolean));
         }
     }
     public class NumberTokenizer : Tokenizable
     {
         public override bool tokenizable(Tokenizer t)
         {
-            return Char.IsDigit(t.input.peek());
+            return Char.IsLetterOrDigit(t.input.peek()) || t.input.peek() == '.' || t.input.peek() == '-' || t.input.peek() == 'e';
         }
         static bool isDigit(Input input)
         {
-            return Char.IsDigit(input.peek());
+            return Char.IsLetterOrDigit(input.peek()) || input.peek() == '.' || input.peek() == '-' || input.peek() == 'e';
         }
         public override Token tokenize(Tokenizer t)
         {
@@ -181,15 +196,16 @@ namespace First
                 "number", t.input.loop(isDigit));
         }
     }
+
     public class WhiteSpaceTokenizer : Tokenizable
     {
         public override bool tokenizable(Tokenizer t)
         {
-            return Char.IsWhiteSpace(t.input.peek());
+            return t.input.peek() == ' ';
         }
         static bool isWhiteSpace(Input input)
         {
-            return Char.IsWhiteSpace(input.peek());
+            return input.peek() == ' ';
         }
         public override Token tokenize(Tokenizer t)
         {
@@ -197,24 +213,588 @@ namespace First
                 "whitespace", t.input.loop(isWhiteSpace));
         }
     }
+
+    public class ObjectStart : Tokenizable
+    {
+        public override bool tokenizable(Tokenizer t)
+        {
+            char currentCharacter = t.input.peek();
+            return currentCharacter == '{';
+        }
+        static bool objectStart(Input input)
+        {
+            char currentCharacter = input.peek();
+            return currentCharacter == '{';
+        }
+        public override Token tokenize(Tokenizer t)
+        {
+            return new Token(t.input.Position, t.input.LineNumber,
+                "ObjectStart", t.input.loop(objectStart));
+        }
+    }
+    public class ObjectEnd : Tokenizable
+    {
+        public override bool tokenizable(Tokenizer t)
+        {
+            char currentCharacter = t.input.peek();
+            return currentCharacter == '}';
+        }
+        static bool objectEnd(Input input)
+        {
+            char currentCharacter = input.peek();
+            return currentCharacter == '}';
+        }
+        public override Token tokenize(Tokenizer t)
+        {
+            return new Token(t.input.Position, t.input.LineNumber,
+                "ObjectEnd", t.input.loop(objectEnd));
+        }
+    }
+    public class Colon : Tokenizable
+    {
+        public override bool tokenizable(Tokenizer t)
+        {
+            char currentCharacter = t.input.peek();
+            return currentCharacter == ':';
+        }
+        static bool colon(Input input)
+        {
+            char currentCharacter = input.peek();
+            return currentCharacter == ':';
+        }
+        public override Token tokenize(Tokenizer t)
+        {
+            return new Token(t.input.Position, t.input.LineNumber,
+                "Colon", t.input.loop(colon));
+        }
+    }
+
+    public class Comma : Tokenizable
+    {
+        public override bool tokenizable(Tokenizer t)
+        {
+            char currentCharacter = t.input.peek();
+            return currentCharacter == ',';
+        }
+        static bool comma(Input input)
+        {
+            char currentCharacter = input.peek();
+            return currentCharacter == ',';
+        }
+        public override Token tokenize(Tokenizer t)
+        {
+            return new Token(t.input.Position, t.input.LineNumber,
+                "Comma", t.input.loop(comma));
+        }
+    }
+
+    public class ArrayStart : Tokenizable
+    {
+        public override bool tokenizable(Tokenizer t)
+        {
+            char currentCharacter = t.input.peek();
+            return currentCharacter == '[';
+        }
+        static bool arrayStart(Input input)
+        {
+            char currentCharacter = input.peek();
+            return currentCharacter == '[';
+        }
+        public override Token tokenize(Tokenizer t)
+        {
+            return new Token(t.input.Position, t.input.LineNumber,
+                "ArrayStart", t.input.loop(arrayStart));
+        }
+    }
+    public class ArrayEnd : Tokenizable
+    {
+        public override bool tokenizable(Tokenizer t)
+        {
+            char currentCharacter = t.input.peek();
+            return currentCharacter == ']';
+        }
+        static bool arrayEnd(Input input)
+        {
+            char currentCharacter = input.peek();
+            return currentCharacter == ']';
+        }
+        public override Token tokenize(Tokenizer t)
+        {
+            return new Token(t.input.Position, t.input.LineNumber,
+                "ArrayEnd", t.input.loop(arrayEnd));
+        }
+    }
     class Program
     {
+        public static string CheckString(Input input)
+        {
+            char currentCharacter = input.peek();
+            string tokenString = "";
+            bool continueString = true;
+            bool oneEscapeChar = false;
+            char[] escapeSequence = { '\"', '\\', '/', 'b', 'f', 'n', 'r', 't', 'u' };
+            int uCounter = 1;
+            if (currentCharacter == '\"')
+            {
+                //tokenString += input.peek();
+                currentCharacter = input.step().Character;
+                while (input.hasMore() && continueString )
+                {
+                    if (input.peek() == '\\' )
+                    {
+                        tokenString += input.peek();
+                        input.step();
+                        foreach (var chr in escapeSequence)
+                        {
+                            if (input.peek() == escapeSequence[8])
+                            {
+                                tokenString += input.peek();
+                                input.step();
+                                //Console.WriteLine(tokenString + input.peek());
+                                //oneEscapeChar = true;  
+                                while (uCounter < 4)
+                                {
+                                    int hexValue = Convert.ToInt32(Char.ToUpperInvariant(input.peek()));
+                                    //byte hexValue = Encoding.ASCII.GetByte(hexChar);
+                                    if ((hexValue > 64 && hexValue < 71) || ((hexValue >= 0) && (hexValue <= 9)))
+                                    {
+                                        //Console.WriteLine(hexValue + " inside if");
+                                        tokenString += input.peek();
+                                        uCounter++;
+                                        input.step();
+                                    }
+                                    else
+                                    {
+                                        continueString = false;
+                                        break;
+                                    }
+                                }
+                                //Console.WriteLine("out of while");
+                            }
+                            else if (input.peek() == chr)
+                            {
+                                tokenString += input.peek();
+                                input.step();
+                                oneEscapeChar = true;
+                            }
+                            else
+                            {
+                                continueString = false;
+                            }
+                            if (oneEscapeChar)
+                                break;
+                        }
+                    }
+                    tokenString += input.peek();
+                    input.step();
+                    if (input.peek() == '\"')
+                    {
+                        return tokenString;
+                    }
+                }
+                if (input.peek() == '"')
+                {
+                    tokenString += input.peek();
+                    return tokenString;
+                }
+                return "failed";
+            }
+            else
+            {
+                return "null";
+            }
+        }
+        public string CheckNumber(Input input)
+        {
+            int fraction = 0;
+            bool startLoop = false;
+            int exponent = 0;
+            string number = "";
+            char currentCharacter = input.peek();
+            {
+                if (currentCharacter == '-')
+                {
+                    number += currentCharacter;
+                    input.step();
+                    currentCharacter = input.peek();
+                    if (Char.IsDigit(currentCharacter))
+                    {
+                        number += currentCharacter;
+                        input.step();
+                        currentCharacter = input.peek();
+                        startLoop = true;
+                    }
+                }
+                else if (Char.IsDigit(currentCharacter))
+                {
+                    number += currentCharacter;
+                    input.step();
+                    currentCharacter = input.peek();
+                    startLoop = true;
+                }
+                while (input.hasMore() && startLoop && (fraction < 2) && (exponent < 2))
+                {
+                    if (currentCharacter == '-')
+                    {
+                        throw new Exception("More than one sign");
+                    }
+                    else if (Char.IsDigit(currentCharacter))
+                    {
+                        number += currentCharacter;
+                        input.step();
+                        currentCharacter = input.peek();
+                    }
+                    else if (currentCharacter == '.' && (fraction < 2))
+                    {
+                        number += currentCharacter;
+                        input.step();
+                        currentCharacter = input.peek();
+                        fraction++;
+                    }
+                    else if (currentCharacter == 'e' || currentCharacter == 'E')
+                    {
+                        number += currentCharacter;
+                        input.step();
+                        currentCharacter = input.peek();
+                        exponent++;
+                        if ((currentCharacter == '-') || (currentCharacter == '+'))
+                        {
+                            number += currentCharacter;
+                            input.step();
+                            currentCharacter = input.peek();
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("failed");
+                    }
+                }
+                if (!startLoop || (fraction >= 2 || exponent >= 2))
+                {
+                    throw new Exception("failed");
+                }
+                return number;
+            }
+        }
+        public static string CheckBool(Input input)
+        {
+            string[] arr = { "true", "false", "null" };
+            string boolString = "";
+            char currentCharacter = input.peek();
+            if (currentCharacter == 't')
+            {
+                char[] trueArray = arr[0].ToCharArray();
+                foreach (char chr in trueArray)
+                {
+                    if (currentCharacter == chr)
+                    {
+                        boolString += currentCharacter;
+                        input.step();
+                        currentCharacter = input.peek();
+                    }
+                    else
+                    {
+                        throw new Exception("Unexpected true value.");
+                    }
+                }
+                return boolString;
+            }
+            else if (currentCharacter == 'f')
+            {
+                char[] falseArray = arr[1].ToCharArray();
+                foreach (char chr in falseArray)
+                {
+                    if (currentCharacter == chr)
+                    {
+                        boolString += currentCharacter;
+                        input.step();
+                        currentCharacter = input.peek();
+                    }
+                    else
+                    {
+                        throw new Exception("Unexpected false value.");
+                    }
+                }
+                return boolString;
+            }
+            else if (currentCharacter == 'n')
+            {
+                char[] nullArray = arr[2].ToCharArray();
+                foreach (char chr in nullArray)
+                {
+                    if (currentCharacter == chr)
+                    {
+                        boolString += currentCharacter;
+                        input.step();
+                        currentCharacter = input.peek();
+                    }
+                    else
+                    {
+                        throw new Exception("Unexpected null value.");
+                    }
+                }
+                return boolString;
+            }
+            else
+            {
+                throw new Exception("not true, false, null.");
+            }
+        }
+        public static string CheckObject(Input input)
+        {
+            char currentCharacter = input.peek();
+            string arrayString = "";
+            if (currentCharacter == '{')
+            {
+                arrayString += currentCharacter;
+                input.step();
+                currentCharacter = input.peek();
+                while (Char.IsWhiteSpace(currentCharacter) && input.hasMore())
+                {
+                    currentCharacter = input.peek();
+                    arrayString += currentCharacter;
+                    input.step();
+                }
+                while (input.hasMore() && currentCharacter != '}')
+                {
+                    if (Char.IsLetterOrDigit(currentCharacter))
+                    {
+                        while (input.hasMore() && (Char.IsLetterOrDigit(currentCharacter) || Char.IsWhiteSpace(currentCharacter)))
+                        {
+                            arrayString += currentCharacter;
+                            input.step();
+                            currentCharacter = input.peek();
+                        }
+                    }
+                    else if (currentCharacter == ',')
+                    {
+                        currentCharacter = input.peek();
+                        arrayString += currentCharacter;
+                        input.step();
+                    }
+                    else if (currentCharacter == '{')
+                    {
+                        while (input.hasMore() && currentCharacter != '}')
+                        {
+                            currentCharacter = input.peek();
+                            arrayString += currentCharacter;
+                            input.step();
+                        }
+                        if (currentCharacter == '}')
+                        {
+                            currentCharacter = input.peek();
+                            arrayString += currentCharacter;
+                            input.step();
+                        }
+                    }
+                    else if (Char.IsWhiteSpace(currentCharacter))
+                    {
+                        while (Char.IsWhiteSpace(currentCharacter) && input.hasMore())
+                        {
+                            currentCharacter = input.peek();
+                            arrayString += currentCharacter;
+                            input.step();
+                        }
+                    }
+                }
+                if (currentCharacter == ']')
+                {
+                    arrayString += currentCharacter;
+                    return arrayString;
+                }
+                else
+                {
+                    return "Error in array.";
+                }
+            }
+            else
+            {
+                return "Error in array.";
+            }
+        }
+        public static string CheckArray(Input input)
+        {
+            char currentCharacter = input.peek();
+            string arrayString = "";
+            if (currentCharacter == '[')
+            {
+                arrayString += currentCharacter;
+                input.step();
+                currentCharacter = input.peek();
+                while (Char.IsWhiteSpace(currentCharacter) && input.hasMore())
+                {
+                    currentCharacter = input.peek();
+                    arrayString += currentCharacter;
+                    input.step();
+                }
+                while (input.hasMore() && currentCharacter != ']')
+                {
+                    if (Char.IsLetterOrDigit(currentCharacter))
+                    {
+                        while (input.hasMore() && (Char.IsLetterOrDigit(currentCharacter) || Char.IsWhiteSpace(currentCharacter)))
+                        {
+                            arrayString += currentCharacter;
+                            input.step();
+                            currentCharacter = input.peek();
+                        }
+                    }
+                    else if (currentCharacter == ',')
+                    {
+                        currentCharacter = input.peek();
+                        arrayString += currentCharacter;
+                        input.step();
+                    }
+                    else if (currentCharacter == '{')
+                    {
+                        while (input.hasMore() && currentCharacter != '}')
+                        {
+                            currentCharacter = input.peek();
+                            arrayString += currentCharacter;
+                            input.step();
+                        }
+                        if (currentCharacter == '}')
+                        {
+                            currentCharacter = input.peek();
+                            arrayString += currentCharacter;
+                            input.step();
+                        }
+                    }
+                    else if (Char.IsWhiteSpace(currentCharacter))
+                    {
+                        while (Char.IsWhiteSpace(currentCharacter) && input.hasMore())
+                        {
+                            currentCharacter = input.peek();
+                            arrayString += currentCharacter;
+                            input.step();
+                        }
+                    }
+                }
+                if (currentCharacter == ']')
+                {
+                    arrayString += currentCharacter;
+                    return arrayString;
+                }
+                else
+                {
+                    return "Error in array.";
+                }
+            }
+            else
+            {
+                return "Error in array.";
+            }
+        }
         static void Main(string[] args)
         {
-            Tokenizer t = new Tokenizer(new Input("{}"), new Tokenizable[] {
+            Stack stack = new Stack();
+            Stack stackRev = new Stack();
+            Program p = new Program();
+            Tokenizer t = new Tokenizer(new Input(" {\"Name\":\"Turki\",    \"age\":54,\"is old\":true}"), new Tokenizable[] {
                 new WhiteSpaceTokenizer(),
-                new IdTokenizer(new List<string>
-                {
-                    "if","else","for","fun","return"
-                }),
-                new NumberTokenizer()
-            }); ;
+                new Boolean(),
+                new StringKey(),
+                new NumberTokenizer(),
+                new ObjectStart(),
+                new ObjectEnd(),
+                new Colon(),
+                new Comma(),
+                new ArrayStart(),
+                new ArrayEnd()
+
+            });
+
+
             Token token = t.tokenize();
+
+            string checkString = "";
+
+
+            string peek = null;
             while (token != null)
             {
-                Console.WriteLine(token.Value);
+                if (token.Value.Contains("\""))
+                {
+                    Input i = new Input(token.Value);
+                    checkString = CheckString(i);
+                    //  Console.WriteLine(checkString);
+                }
+                if (token.Type.Equals("number"))
+                {
+                    Input i = new Input(token.Value);
+                    p.CheckNumber(i);
+                    //  Console.WriteLine(checkNumber);
+                }
+                if (token.Type.Equals("boolean"))
+                {
+                    Input i = new Input(token.Value);
+                    CheckBool(i);
+                    //  Console.WriteLine(checkNumber);
+                }
+                if (token.Type.Equals("ObjectStart"))
+                {
+                    Input i = new Input(token.Value);
+                    CheckObject(i);
+                    //  Console.WriteLine(checkNumber);
+                }
+                if (token.Type.Equals("ArrayStart"))
+                {
+                    Input i = new Input(token.Value);
+                    CheckArray(i);
+                    //  Console.WriteLine(checkNumber);
+                }
+                if (checkString.Equals("failed")) { stack.Push("invalid"); }
+
+
+                if (stack.Count != 0) { peek = (string)stack.Peek(); }
+                if (stack.Count == 0 && (token.Value.Equals("{"))) { stack.Push(token.Value); }
+                else if (token.Type.Equals("whitespace")) { }
+                else if (stack.Count != 0 && token.Value != peek && token.Type.Equals("boolean")) { stack.Push(token.Value); }
+/*                else if (stack.Count != 0 && token.Value != peek && token.Type.Equals("ObjectStart")) { stack.Push(token.Value); }
+                else if (stack.Count != 0 && token.Value != peek && token.Type.Equals("ArrayStart")) { stack.Push(token.Value); }*/
+                else if (stack.Count != 0 && token.Value != peek && token.Type.Equals("StringKey")) { stack.Push(token.Value); }
+                else if (stack.Count != 0 && token.Value != peek && token.Value.Equals(":")) { stack.Push(token.Value); }
+                else if (stack.Count != 0 && token.Value != peek && (token.Value.Equals(",") || token.Value.Equals('}'))) { stack.Push(token.Value); }
+                else if (stack.Count != 0 && token.Value != peek && token.Type.Equals("number")) { stack.Push(token.Value); }
+                else if (stack.Count != 0 && token.Value != peek && token.Value.Equals("}")) { stack.Push(token.Value); }
+                else if (stack.Count != 0 && token.Value != peek && token.Value.Equals("[")) { stack.Push(token.Value); }
+                else if (stack.Count != 0 && token.Value != peek && token.Value.Equals("]")) { stack.Push(token.Value); }
                 token = t.tokenize();
+
+
+
             }
+
+            string jesonFormat = "";
+            foreach (Object obj in stack)
+            {
+                //Console.Write(obj);
+
+                stackRev.Push(obj);
+
+            }
+            //Console.WriteLine();
+
+            if (stackRev.Contains("invalid"))
+            {
+                Console.WriteLine("invalid json format");
+            }
+            else
+            {
+                foreach (Object obj in stackRev)
+                {
+                    // Console.Write(obj);
+
+                    jesonFormat += obj;
+
+
+                }
+            }
+            Console.WriteLine();
+            Console.Write(jesonFormat);
+            Console.WriteLine();
+
+
+
         }
     }
 }

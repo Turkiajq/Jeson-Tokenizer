@@ -10,3 +10,4 @@ C:\Users\Adel_Kalu\source\repos\Jeson Tokenizer\Jeson Tokenizer\obj\Debug\netcor
 C:\Users\Adel_Kalu\source\repos\Jeson Tokenizer\Jeson Tokenizer\obj\Debug\netcoreapp3.1\Jeson Tokenizer.dll
 C:\Users\Adel_Kalu\source\repos\Jeson Tokenizer\Jeson Tokenizer\obj\Debug\netcoreapp3.1\Jeson Tokenizer.pdb
 C:\Users\Adel_Kalu\source\repos\Jeson Tokenizer\Jeson Tokenizer\obj\Debug\netcoreapp3.1\Jeson Tokenizer.genruntimeconfig.cache
+C:\Users\Adel_Kalu\source\repos\Jeson Tokenizer\Jeson Tokenizer\obj\Debug\netcoreapp3.1\Jeson Tokenizer.csprojAssemblyReference.cache
