@@ -324,6 +324,183 @@ namespace First
                 "ArrayEnd", t.input.loop(arrayEnd));
         }
     }
+
+    public abstract class JsonValue
+    {
+
+    }
+    public class JkeyValue<TValue> : JsonValue
+    {
+        public string key { set; get; }
+        public TValue value { set; get; }
+        public string type { set; get; }
+
+
+        public override string ToString()
+        {
+            return "KEY: " + key.ToString() + "\nVALUE: " + value + "\nTYPE: " + type;
+        }
+    }
+
+    public class Jparser
+    {
+        public string readKey(string s)
+        {
+            string jKey = null;
+            int i = 0;
+            while (i < s.Length)
+            {
+                if (s[i] == '{')
+                {
+                    i++;
+                    if (s[i] == '"')
+                    {
+                        i++;
+                        while (s[i] != '"' && i < s.Length)
+                        {
+                            jKey += s[i];
+                            i++;
+                        }
+
+                    }
+                }
+                return jKey;
+            }
+            return jKey;
+        }
+
+        public JsonValue jkeyValue(string s)
+        {
+            //read Json key
+            string key;
+            key = readKey(s);
+            s = s.Substring(key.Length + 4, s.Length - (key.Length + 4));
+
+            //read Json value
+            int i = 0;
+            if (s[i] == '"')
+            {
+                //type is Jstring
+                JkeyValue<string> j = new JkeyValue<string>();
+                i++;
+                string val = null;
+                while (s[i] != '"' && i < s.Length)
+                {
+                    val += s[i];
+                    i++;
+                }
+                j.key = key;
+                j.value = val;
+                j.type = "Jstring";
+
+                return j;
+
+            }
+            else if (char.IsNumber(s[i]))
+            {
+                //type is Jnumber
+                JkeyValue<string> j = new JkeyValue<string>();
+                j.key = key;
+                j.type = "Jnumber";
+
+                string val = null;
+                while (i < s.Length && char.IsNumber(s[i]) || s[i] == '-' || s[i] == '+' || s[i] == 'e' || s[i] == 'E' || s[i] == '-' || s[i] == '.')
+                {
+                    val += s[i];
+                    i++;
+                }
+
+                Input input = new Input(val);
+                Program p = new Program();
+                j.value = p.CheckNumber(input);
+                return j;
+
+
+            }
+            else if (char.IsLetter(s[i]) && s[i] != '{')
+            {
+
+                //type is Jnumber
+                if (s[i] == 'f' || s[i] == 't')
+                {
+                    JkeyValue<string> j = new JkeyValue<string>();
+                    j.key = key;
+                    j.type = "Jbool";
+
+                    string val = null;
+                    while (i < s.Length && char.IsLetter(s[i]) && (s[i] != '}' || s[i] != ']' || s[i] != ','))
+                    {
+                        val += s[i];
+                        i++;
+                    }
+                    j.value = val;
+                    return j;
+                }
+                else if (s[i] == 'n')
+                {
+                    JkeyValue<string> j = new JkeyValue<string>();
+                    j.key = key;
+                    j.type = "Jnull";
+
+                    string val = null;
+                    while (i < s.Length && char.IsLetter(s[i]) && (s[i] != '}' || s[i] != ']' || s[i] != ','))
+                    {
+                        val += s[i];
+                        i++;
+                    }
+                    j.value = val;
+                    return j;
+                }
+
+
+            }
+
+            else if (s[i] == '{')
+            {
+
+                JkeyValue<List<JsonValue>> j = new JkeyValue<List<JsonValue>>();
+
+                j.key = key;
+                j.type = "Jobject";
+
+                string val = null;
+                while (i < s.Length)
+                {
+                    val += s[i];
+                    i++;
+                }
+                j.value = new List<JsonValue>();
+                j.value.Add(jkeyValue(val));
+
+
+                return j;
+            }
+            else if (s[i] == '[')
+            {
+                JkeyValue<List<string>> j = new JkeyValue<List<string>>();
+                j.value = new List<string>();
+                j.key = key;
+                j.type = "Jarray";
+
+                string val = null;
+                while (i < s.Length && s[i] != ']')
+                {
+                    while (i < s.Length && s[i] != ',')
+                    {
+                        val += s[i];
+                        i++;
+                    }
+                    j.value.Add(val);
+                    i++;
+                }
+                return j;
+            }
+
+            return null;
+        }
+
+    }
+
     class Program
     {
         public static string CheckString(Input input)
@@ -689,7 +866,7 @@ namespace First
             Stack stack = new Stack();
             Stack stackRev = new Stack();
             Program p = new Program();
-            Tokenizer t = new Tokenizer(new Input(" {\"Name\":\"Turki\",    \"age\":54,\"is old\":true}"), new Tokenizable[] {
+            Tokenizer t = new Tokenizer(new Input(" {\"Name\":\"Ali\"}"), new Tokenizable[] {
                 new WhiteSpaceTokenizer(),
                 new Boolean(),
                 new StringKey(),
@@ -789,11 +966,13 @@ namespace First
 
                 }
             }
-            Console.WriteLine();
-            Console.Write(jesonFormat);
-            Console.WriteLine();
 
 
+            JsonValue j;
+            Jparser jparser = new Jparser();
+            j = jparser.jkeyValue(jesonFormat);
+            Console.WriteLine(j);
+            
 
         }
     }

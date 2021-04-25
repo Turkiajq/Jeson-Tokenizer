@@ -1,0 +1,25 @@
+﻿<Properties StartupConfiguration="{A1801CCC-610C-49A8-8581-024AA0D07A9D}|Default">
+  <MonoDevelop.Ide.ItemProperties.Jeson_220Tokenizer PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Jeson Tokenizer/Program.cs">
+    <Files>
+      <File FileName="Jeson Tokenizer/Program.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Jeson Tokenizer" expanded="True">
+            <Node name="Jeson Tokenizer" expanded="True">
+              <Node name="Program.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

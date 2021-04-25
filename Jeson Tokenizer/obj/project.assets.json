@@ -8,26 +8,25 @@
     ".NETCoreApp,Version=v3.1": []
   },
   "packageFolders": {
-    "C:\\Users\\Adel_Kalu\\.nuget\\packages\\": {}
+    "/Users/ziyad/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Adel_Kalu\\source\\repos\\Jeson Tokenizer\\Jeson Tokenizer\\Jeson Tokenizer.csproj",
+      "projectUniqueName": "/Users/ziyad/Desktop/Jeson-Tokenizer/Jeson Tokenizer/Jeson Tokenizer.csproj",
       "projectName": "Jeson Tokenizer",
-      "projectPath": "C:\\Users\\Adel_Kalu\\source\\repos\\Jeson Tokenizer\\Jeson Tokenizer\\Jeson Tokenizer.csproj",
-      "packagesPath": "C:\\Users\\Adel_Kalu\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Adel_Kalu\\source\\repos\\Jeson Tokenizer\\Jeson Tokenizer\\obj\\",
+      "projectPath": "/Users/ziyad/Desktop/Jeson-Tokenizer/Jeson Tokenizer/Jeson Tokenizer.csproj",
+      "packagesPath": "/Users/ziyad/.nuget/packages/",
+      "outputPath": "/Users/ziyad/Desktop/Jeson-Tokenizer/Jeson Tokenizer/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Adel_Kalu\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/ziyad/.config/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp3.1": {
@@ -59,7 +58,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.202/RuntimeIdentifierGraph.json"
       }
     }
   }
